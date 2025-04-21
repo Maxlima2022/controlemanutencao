@@ -58,16 +58,11 @@
       background-color: #00e6e6;
     }
 
-    .tabela-container {
-      overflow-x: auto;
-      margin-top: 2rem;
-    }
-
     table {
       width: 100%;
+      margin-top: 2rem;
       border-collapse: collapse;
       background: rgba(255, 255, 255, 0.1);
-      min-width: 600px;
     }
 
     th, td {
@@ -93,18 +88,6 @@
     td button:hover {
       background: darkred;
     }
-
-    @media (max-width: 600px) {
-      form {
-        padding: 1rem;
-      }
-      th, td {
-        padding: 0.6rem;
-      }
-      table {
-        font-size: 0.9rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -121,27 +104,23 @@
     <input type="date" id="dataCompra" required />
 
     <button type="submit">Adicionar Material</button>
-    <p></p>
-     <button class="voltar-btn" onclick="window.location.href='menu.html'">Voltar</button>
   </form>
 
-  <div class="tabela-container">
-    <table id="tabela-material">
-      <thead>
-        <tr>
-          <th>Material</th>
-          <th>Preço</th>
-          <th>Data da Compra</th>
-          <th>Próxima Compra</th>
-          <th>Registro</th>
-          <th>Ação</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Dados serão inseridos aqui -->
-      </tbody>
-    </table>
-  </div>
+  <table id="tabela-material">
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Preço</th>
+        <th>Data da Compra</th>
+        <th>Próxima Compra</th>
+        <th>Registro</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dados serão inseridos aqui -->
+    </tbody>
+  </table>
 
   <script>
     const form = document.getElementById('form-material');
@@ -156,7 +135,7 @@
     function calcularProximaCompra(dataCompra, dias = 60) {
       const data = new Date(dataCompra);
       data.setDate(data.getDate() + dias);
-      return data.toISOString().split('T')[0];
+      return data.toISOString().split('T')[0]; // formato yyyy-mm-dd
     }
 
     function atualizarTabela() {
