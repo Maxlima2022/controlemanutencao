@@ -1,97 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compra de Material</title>
   <style>
     body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
       font-family: 'Segoe UI', sans-serif;
-      color: #fff;
+      margin: 0;
       padding: 2rem;
+      color: #fff;
     }
 
     h1 {
       text-align: center;
-      color: #00ffff;
-      text-shadow: 0 0 8px #00ffff;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
     }
 
     form {
-      max-width: 600px;
+      max-width: 500px;
       margin: 2rem auto;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      box-shadow: 0 0 10px #0ff;
     }
 
     label {
       display: block;
-      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
     }
 
-    input[type="text"],
-    input[type="number"],
-    input[type="date"] {
+    input {
       width: 100%;
       padding: 0.6rem;
-      border-radius: 6px;
+      margin-bottom: 1.2rem;
       border: none;
-      margin-top: 0.3rem;
+      border-radius: 8px;
     }
 
     button {
-      margin-top: 1.5rem;
-      padding: 0.6rem 1.2rem;
-      background-color: #00ffff;
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #0ff;
+      border: none;
       color: #000;
       font-weight: bold;
-      border: none;
       border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
     }
 
     button:hover {
-      background-color: #00dddd;
+      background-color: #00e6e6;
     }
 
     table {
-      width: 90%;
-      margin: 2rem auto;
+      width: 100%;
+      margin-top: 2rem;
       border-collapse: collapse;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     th, td {
-      border: 1px solid #00ffff;
-      padding: 0.8rem;
+      padding: 1rem;
+      border: 1px solid #0ff;
       text-align: center;
     }
 
     th {
-      background-color: #00ffff;
+      background-color: #0ff;
       color: #000;
     }
 
-    tr:nth-child(even) {
-      background-color: rgba(0,0,0,0.4);
-    }
-
-    .voltar-btn {
-      display: block;
-      margin: 2rem auto;
-      padding: 10px 20px;
-      background: #00ffff;
-      color: #000;
-      font-weight: bold;
+    td button {
+      background: red;
+      color: white;
       border: none;
-      border-radius: 10px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
       cursor: pointer;
     }
 
-    .voltar-btn:hover {
-      background: #00dddd;
+    td button:hover {
+      background: darkred;
     }
   </style>
 </head>
@@ -99,16 +94,16 @@
   <h1>Compra de Material</h1>
 
   <form id="form-material">
-    <label for="nome">Nome do Material:</label>
-    <input type="text" id="nome" required>
+    <label for="nome">Nome do Material</label>
+    <input type="text" id="nome" required />
 
-    <label for="preco">Preço (R$):</label>
-    <input type="number" id="preco" step="0.01" required>
+    <label for="preco">Preço (R$)</label>
+    <input type="number" id="preco" step="0.01" required />
 
-    <label for="dataCompra">Data da Compra:</label>
-    <input type="date" id="dataCompra" required>
+    <label for="dataCompra">Data da Compra</label>
+    <input type="date" id="dataCompra" required />
 
-    <button type="submit">Salvar</button>
+    <button type="submit">Adicionar Material</button>
   </form>
 
   <table id="tabela-material">
@@ -117,14 +112,15 @@
         <th>Material</th>
         <th>Preço</th>
         <th>Data da Compra</th>
-        <th>Data de Registro</th>
+        <th>Próxima Compra</th>
+        <th>Registro</th>
         <th>Ação</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      <!-- Dados serão inseridos aqui -->
+    </tbody>
   </table>
-
-  <button class="voltar-btn" onclick="location.reload()">Atualizar Página</button>
 
   <script>
     const form = document.getElementById('form-material');
@@ -136,6 +132,12 @@
       localStorage.setItem('materiais', JSON.stringify(materiais));
     }
 
+    function calcularProximaCompra(dataCompra, dias = 60) {
+      const data = new Date(dataCompra);
+      data.setDate(data.getDate() + dias);
+      return data.toISOString().split('T')[0]; // formato yyyy-mm-dd
+    }
+
     function atualizarTabela() {
       tabela.innerHTML = "";
       materiais.forEach((mat, index) => {
@@ -145,6 +147,7 @@
           <td>${mat.nome}</td>
           <td>R$ ${parseFloat(mat.preco).toFixed(2).replace('.', ',')}</td>
           <td>${mat.dataCompra}</td>
+          <td>${mat.proximaCompra}</td>
           <td>${mat.dataRegistro}</td>
           <td><button onclick="removerMaterial(${index})">Excluir</button></td>
         `;
@@ -164,6 +167,7 @@
         nome: nome,
         preco: preco,
         dataCompra: dataCompra,
+        proximaCompra: calcularProximaCompra(dataCompra),
         dataRegistro: new Date().toLocaleString()
       };
 
