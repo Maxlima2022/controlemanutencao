@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0ff"/>
+  <title>Controle de Manutenção</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #0ff;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 20px #0ff;
+      border-radius: 16px;
+      margin-top: 3rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0ff;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input, button {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    input {
+      background: #111;
+      color: #0ff;
+      border: 1px solid #0ff;
+    }
+
+    button {
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .mensagem {
+      margin-top: 1rem;
+      text-align: center;
+      color: lime;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Controle de Manutenção</h1>
+    <form id="form">
+      <input type="text" id="empresa" placeholder="Nome da Empresa" required />
+      <input type="text" id="descricao" placeholder="Descrição da Manutenção" required />
+      <input type="date" id="data" required />
+      <button type="submit">Salvar</button>
+      
+    <button class="voltar-btn" onclick="window.location.href='menu.html'">Voltar</button>
+    </form>
+    <div class="mensagem" id="mensagem"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const empresa = document.getElementById('empresa').value;
+      const descricao = document.getElementById('descricao').value;
+      const data = document.getElementById('data').value;
+
+      const manutencao = { empresa, descricao, data };
+
+      // Salva como realizado no localStorage
+      let realizados = JSON.parse(localStorage.getItem('realizados')) || [];
+      realizados.push(manutencao);
+      localStorage.setItem('realizados', JSON.stringify(realizados));
+
+      // Mostra mensagem de sucesso
+      mensagem.textContent = 'Manutenção salva com sucesso!';
+
+      // Limpa os campos do formulário
+      form.reset();
+
+      // Esconde a mensagem depois de 3 segundos
+      setTimeout(() => {
+        mensagem.textContent = '';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

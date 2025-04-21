@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Serviços Realizados</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #0ff;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
+      max-width: 100%;
+      margin: auto;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 20px #0ff;
+      border-radius: 16px;
+      margin-top: 3rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+      margin-bottom: 1rem;
+    }
+
+    /* Legenda de Cores */
+    .legenda {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .legenda span {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #000;
+    }
+
+    .legenda .realizado { background: #28a745; } /* Verde */
+    .legenda .proxima { background: #ffc107; }   /* Amarelo */
+    .legenda .cadastro { background: #dc3545; }  /* Vermelho */
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #0ff;
+      color: #fff;
+    }
+
+    th {
+      background: #0ff;
+      text-shadow: 0 0 8px #0ff;
+    }
+
+    tr {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .servico-realizado {
+      background: #28a745 !important;
+      color: #000;
+    }
+
+    .proxima-manutencao {
+      background: #ffc107 !important;
+      color: #000;
+    }
+
+    .sem-status {
+      background: #dc3545 !important;
+      color: #fff;
+    }
+
+    .voltar-btn {
+      display: block;
+      margin: 2rem auto 0;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .voltar-btn:hover {
+      background: #00e6e6;
+      transform: scale(1.05);
+    }
+
+    button {
+      background: transparent;
+      border: 1px solid #0ff;
+      color: #0ff;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      background: #0ff;
+      color: #000;
+    }
+
+    input[type="date"] {
+      padding: 5px;
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+
+      .voltar-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .legenda span {
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 6px;
+      }
+
+      .voltar-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+
+      input[type="date"] {
+        font-size: 12px;
+      }
+
+      button {
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .container {
+        padding: 0.5rem;
+      }
+
+      table {
+        font-size: 10px;
+      }
+
+      .voltar-btn {
+        font-size: 10px;
+        padding: 5px 10px;
+      }
+
+      button {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Serviços Realizados</h1>
+
+    <!-- Legenda de Cores -->
+    <div class="legenda">
+      <span class="realizado">Realizado = Verde</span>
+      <span class="proxima">Próxima Manutenção = Amarelo</span>
+      <span class="cadastro">Apenas Cadastrado = Vermelho</span>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-container">
+      <table id="tabelaRealizados">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Descrição</th>
+            <th>Data</th>
+            <th>Data Próxima Manutenção</th>
+            <th>Opções</th>
+          </tr>
+        </thead>
+        <tbody id="listaRealizados"></tbody>
+      </table>
+    </div>
+
+    <button class="voltar-btn" onclick="window.location.href='menu.html'">Voltar</button>
+  </div>
+
+  <script>
+    const listaRealizados = document.getElementById("listaRealizados");
+    const dados = JSON.parse(localStorage.getItem("realizados")) || [];
+
+    function carregarTabela() {
+      listaRealizados.innerHTML = '';
+
+      dados.forEach((item, index) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${item.empresa}</td>
+          <td>${item.descricao}</td>
+          <td>${item.data}</td>
+          <td>
+            <input type="date" value="${item.proximaManutencaoData || ''}" 
+                   onchange="atualizarProximaManutencao(${index}, this.value)" />
+          </td>
+          <td>
+            <button onclick="marcarComoRealizado(${index})">Serviço Realizado</button>
+            <button onclick="marcarProximaManutencao(${index})">Próxima Manutenção</button>
+            <button onclick="excluirServico(${index})">Excluir</button>
+          </td>
+        `;
+
+        if (item.realizado) {
+          tr.classList.add("servico-realizado");
+        } else if (item.proximaManutencao) {
+          tr.classList.add("proxima-manutencao");
+        } else {
+          tr.classList.add("sem-status");
+        }
+
+        listaRealizados.appendChild(tr);
+      });
+    }
+
+    function marcarComoRealizado(index) {
+      dados[index].realizado = true;
+      dados[index].proximaManutencao = false;
+      dados[index].proximaManutencaoData = '';
+      localStorage.setItem("realizados", JSON.stringify(dados));
+      carregarTabela();
+    }
+
+    function marcarProximaManutencao(index) {
+      const item = dados[index];
+      if (!item.realizado) {
+        item.proximaManutencao = true;
+        localStorage.setItem("realizados", JSON.stringify(dados));
+        alert(`Serviço da empresa ${item.empresa} foi marcado para próxima manutenção!`);
+        carregarTabela();
+      }
+    }
+
+    function atualizarProximaManutencao(index, novaData) {
+      dados[index].proximaManutencaoData = novaData;
+      localStorage.setItem("realizados", JSON.stringify(dados));
+    }
+
+    function excluirServico(index) {
+      if (confirm("Tem certeza que deseja excluir este serviço?")) {
+        dados.splice(index, 1);
+        localStorage.setItem("realizados", JSON.stringify(dados));
+        carregarTabela();
+      }
+    }
+
+    carregarTabela();
+  </script>
+</body>
+</html>

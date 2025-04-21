@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Serviços Realizados</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-top: 2rem;
+      font-size: 2rem;
+      text-shadow: 0 0 10px #00ffc8;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #00ffc8;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card h3 {
+      margin: 0;
+      color: #00ffc8;
+    }
+
+    .card p {
+      margin: 0.5rem 0 0;
+      color: #ccc;
+    }
+
+    .voltar {
+      margin: 2rem;
+      padding: 10px 20px;
+      background: #00ffc8;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .voltar:hover {
+      background: #00e6b8;
+      transform: scale(1.05);
+    }
+
+    .excluir-btn, .exportar-pdf-btn {
+      margin: 1rem 0;
+      padding: 10px 20px;
+      background: #dc3545;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .excluir-btn:hover, .exportar-pdf-btn:hover {
+      background: #c82333;
+      transform: scale(1.05);
+    }
+
+    .excluir-servico-btn {
+      background: #ff6347;
+      margin-top: 10px;
+      padding: 5px 15px;
+      border-radius: 5px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .excluir-servico-btn:hover {
+      background: #ff4500;
+    }
+  </style>
+</head>
+<body>
+  <h1>Serviços Realizados</h1>
+  <div class="container" id="servicosContainer">
+    <!-- Serviços realizados serão inseridos aqui -->
+  </div>
+  <button class="voltar" onclick="window.location.href='menu.html'">Voltar ao Início</button>
+  <button class="excluir-btn" onclick="excluirServicosRealizados()">Excluir Todos os Serviços Realizados</button>
+  <button class="exportar-pdf-btn" onclick="exportarParaPDF()">Exportar para PDF</button>
+
+  <script>
+    const container = document.getElementById('servicosContainer');
+    const dados = JSON.parse(localStorage.getItem('realizados')) || [];
+    
+    // Cria uma variável local para os serviços exibidos nesta página
+    let dadosPaginaAtual = [...dados];
+
+    // Filtrando os serviços realizados
+    const realizados = dadosPaginaAtual.filter(servico => servico && servico.realizado === true);
+
+    if (realizados.length === 0) {
+      container.innerHTML = "<p style='text-align:center;'>Nenhum serviço realizado ainda.</p>";
+    } else {
+      realizados.forEach((servico, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <p><strong>Empresa:</strong> ${servico.empresa || 'Empresa desconhecida'}</p>
+          <p><strong>Data de Entrada:</strong> ${servico.entrada || 'Data não informada'}</p>
+          <p><strong>Descrição:</strong> ${servico.descricao || 'Descrição não fornecida'}</p>
+          <p><strong>Próximo Serviço:</strong> ${servico.proximoServico || 'Não definido'}</p>
+          <button class="excluir-servico-btn" onclick="excluirServico(${index})">Excluir Este Serviço</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Função para excluir um serviço específico, afetando apenas a página atual
+    function excluirServico(index) {
+      if (confirm('Tem certeza que deseja excluir este serviço?')) {
+        dadosPaginaAtual.splice(index, 1); // Remove o serviço da memória local da página
+        localStorage.setItem('realizados', JSON.stringify(dadosPaginaAtual)); // Atualiza o localStorage, mas sem afetar outras páginas
+        window.location.reload(); // Recarrega a página para refletir as alterações
+      }
+    }
+
+    // Função para excluir todos os serviços realizados na página atual
+    function excluirServicosRealizados() {
+      if (confirm('Tem certeza que deseja excluir todos os serviços realizados?')) {
+        dadosPaginaAtual = dadosPaginaAtual.filter(servico => !servico.realizado);
+        localStorage.setItem('realizados', JSON.stringify(dadosPaginaAtual)); // Atualiza o localStorage, mas sem afetar outras páginas
+        window.location.reload(); // Recarrega a página para refletir as alterações
+      }
+    }
+
+    // Função para exportar os dados para PDF
+    function exportarParaPDF() {
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text('Serviços Realizados', 14, 20);
+      
+      let y = 30;
+      realizados.forEach(servico => {
+        doc.setFontSize(12);
+        doc.text(`Empresa: ${servico.empresa || 'Empresa desconhecida'}`, 14, y + 10);
+        doc.text(`Data de Entrada: ${servico.entrada || 'Data não informada'}`, 14, y + 20);
+        doc.text(`Descrição: ${servico.descricao || 'Descrição não fornecida'}`, 14, y + 30);
+        doc.text(`Próximo Serviço: ${servico.proximoServico || 'Não definido'}`, 14, y + 40);
+        y += 50; // Ajusta a posição para o próximo serviço
+      });
+
+      doc.save('servicos_realizados.pdf');
+    }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>

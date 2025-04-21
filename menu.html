@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu Principal</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+      margin-top: 3rem;
+      font-size: 2.5rem;
+    }
+
+    .menu-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .menu-item {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 2rem;
+      text-align: center;
+      border-radius: 12px;
+      width: 200px;
+      box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+      transition: 0.3s ease;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(0, 255, 255, 0.3);
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(0, 255, 255, 0.3);
+    }
+
+    .menu-item i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #0ff;
+    }
+
+    .menu-item a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .menu-item a:hover {
+      color: #00e6e6;
+      text-shadow: 0 0 8px #00e6e6;
+    }
+
+    .voltar-btn {
+      display: block;
+      margin: 3rem auto;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .voltar-btn:hover {
+      background: #00e6e6;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .menu-item {
+        width: 150px;
+        padding: 1.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .menu-item a {
+        font-size: 1rem;
+      }
+
+      .voltar-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .menu-item {
+        width: 130px;
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .menu-item a {
+        font-size: 0.9rem;
+      }
+
+      .voltar-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Menu Principal</h1>
+
+  <div class="menu-container">
+    <!-- Serviços Realizados -->
+    <div class="menu-item" onclick="window.location.href='servicos_realizados.html'">
+      <i class="fas fa-check-circle"></i>
+      <a href="#">Serviços Realizados</a>
+    </div>
+
+    <!-- Cadastro de Produto -->
+    <div class="menu-item" onclick="window.location.href='index.html'">
+      <i class="fas fa-cogs"></i>
+      <a href="#">Cadastrar Serviços</a>
+    </div>
+
+    <!-- Relatório -->
+    <div class="menu-item" onclick="window.location.href='realizados.html'">
+      <i class="fas fa-chart-line"></i>
+      <a href="#">Relatório</a>
+    </div>
+
+   
+  
+  </div>
+
+  <button class="voltar-btn" onclick="window.location.href='index.html'">Voltar</button>
+
+  <!-- Adicionando ícones Font Awesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>
