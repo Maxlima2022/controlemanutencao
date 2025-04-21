@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Compra de Material</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: rgba(0,0,0,0.5);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: none;
+      margin-top: 0.3rem;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #00ffff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00dddd;
+    }
+
+    table {
+      width: 90%;
+      margin: 2rem auto;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.1);
+    }
+
+    th, td {
+      border: 1px solid #00ffff;
+      padding: 0.8rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: #00ffff;
+      color: #000;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .voltar-btn {
+      display: block;
+      margin: 2rem auto;
+      padding: 10px 20px;
+      background: #00ffff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .voltar-btn:hover {
+      background: #00dddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Compra de Material</h1>
+
+  <form id="form-material">
+    <label for="nome">Nome do Material:</label>
+    <input type="text" id="nome" required>
+
+    <label for="preco">Preço (R$):</label>
+    <input type="number" id="preco" step="0.01" required>
+
+    <label for="dataCompra">Data da Compra:</label>
+    <input type="date" id="dataCompra" required>
+
+    <button type="submit">Salvar</button>
+  </form>
+
+  <table id="tabela-material">
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Preço</th>
+        <th>Data da Compra</th>
+        <th>Data de Registro</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button class="voltar-btn" onclick="location.reload()">Atualizar Página</button>
+
+  <script>
+    const form = document.getElementById('form-material');
+    const tabela = document.querySelector('#tabela-material tbody');
+
+    let materiais = JSON.parse(localStorage.getItem('materiais')) || [];
+
+    function salvarNoLocalStorage() {
+      localStorage.setItem('materiais', JSON.stringify(materiais));
+    }
+
+    function atualizarTabela() {
+      tabela.innerHTML = "";
+      materiais.forEach((mat, index) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${mat.nome}</td>
+          <td>R$ ${parseFloat(mat.preco).toFixed(2).replace('.', ',')}</td>
+          <td>${mat.dataCompra}</td>
+          <td>${mat.dataRegistro}</td>
+          <td><button onclick="removerMaterial(${index})">Excluir</button></td>
+        `;
+
+        tabela.appendChild(tr);
+      });
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const preco = document.getElementById('preco').value;
+      const dataCompra = document.getElementById('dataCompra').value;
+
+      const novoMaterial = {
+        nome: nome,
+        preco: preco,
+        dataCompra: dataCompra,
+        dataRegistro: new Date().toLocaleString()
+      };
+
+      materiais.push(novoMaterial);
+      salvarNoLocalStorage();
+      atualizarTabela();
+
+      form.reset();
+    });
+
+    function removerMaterial(index) {
+      if (confirm("Deseja excluir este material?")) {
+        materiais.splice(index, 1);
+        salvarNoLocalStorage();
+        atualizarTabela();
+      }
+    }
+
+    atualizarTabela();
+  </script>
+</body>
+</html>
